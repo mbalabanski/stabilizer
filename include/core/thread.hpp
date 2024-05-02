@@ -45,10 +45,26 @@ class ThreadSafeQueue
 public:
 
     void push(T val);
-    T pop();
+    void pop(T& out);
 
 };
 
+template<typename T>
+class ThreadSafeVector
+{
+    std::mutex mut;
+    std::vector<T> vec;
+    std::condition_variable cond;
+
+public:
+
+};
+
+/**
+ * @brief Implements a thread pool structure
+ * 
+ * @tparam T return type of thread action
+ */
 template<typename T>
 class ThreadPool
 {
@@ -57,18 +73,25 @@ class ThreadPool
     ThreadSafeQueue<std::function<T()>> tasks;
     std::vector<Thread> threads;
 
-    std::vector<T> out;
+    ThreadSafeQueue<T> out;
 
+    /**
+     * @brief Run task for each thread in ```ThreadPool::threads```
+     * 
+     */
     void run_task();
 
 public:
 
     ThreadPool(const size_t size = std::thread::hardware_concurrency());
+    ThreadPool(const ThreadPool& other);
 
     template<typename FunctionType>
     void push(FunctionType& t);
 
-    std::vector<T> get_outputs();
+    ThreadSafeQueue<T> get_outputs();
+
+    ThreadPool& operator=(const ThreadPool& other);
 
     ~ThreadPool();
 };

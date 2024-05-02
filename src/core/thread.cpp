@@ -32,17 +32,74 @@ void ThreadSafeQueue<T>::push(T val)
 }
 
 template<typename T>
-T ThreadSafeQueue<T>::pop()
+void ThreadSafeQueue<T>::pop(T& out)
 {
     std::unique_lock<std::mutex> lock(mut);
     cond.wait(lock, [&] { return !queue.empty(); });
-    T val(std::move(queue.front()));
+    out = std::move(queue.front());
     queue.pop();
-    return val;
 }
 
+// ThreadPool
 
+template<typename T>
+ThreadPool<T>::ThreadPool(size_t size = std::thread::hardware_concurrency()) : done(false) 
+{ 
+    // initialize threads
+    try
+    {
+        for (size_t i = 0; i < size; i++)
+        {
+            threads.push_back(
+                Thread(std::thread(&ThreadPool::run_task, this))
+            );
+        }
+    }
+    catch(const std::exception& e)
+    {
+        done = true;
+        std::cerr << e.what() << '\n';
+        throw;
+    }
+}
 
+template<typename T>
+ThreadPool<T>::ThreadPool(const ThreadPool& other) = delete;
+
+template<typename T>
+void ThreadPool<T>::run_task()
+{
+    while (!done)
+    {
+        // while not done, keep trying to perform tasks
+        std::function<T()> task;
+        tasks.pop(task);
+
+        if (task)
+        {
+            T task_out(task());
+            out.push(task_out);
+        }
+        else
+        {
+            // all tasks are taken
+            std::this_thread::yield();
+        }
+    }
+}
+
+template<typename T>
+template<typename FunctionType>
+void ThreadPool<T>::push(FunctionType& f)
+{
+    tasks.push(std::function<T()>(f));
+}
+
+template<typename T>
+ThreadPool<T>::~ThreadPool()
+{
+    done = true;
+}
 
 } // namespace core
 } // namespace sable
