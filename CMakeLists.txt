@@ -37,6 +37,14 @@ endforeach()
 add_library(${PROJECT_N} SHARED ${SRCS})
 target_include_directories(${PROJECT_N} PUBLIC include)
 
+find_package(Threads REQUIRED)
+if(THREADS_HAVE_PTHREAD_ARG)
+  target_compile_options(${PROJECT_N} PUBLIC "-pthread")
+endif()
+if(CMAKE_THREAD_LIBS_INIT)
+  target_link_libraries(${PROJECT_N} "${CMAKE_THREAD_LIBS_INIT}")
+endif()
+
 # Tests
 
 add_executable(WaitTest test/wait.cpp)

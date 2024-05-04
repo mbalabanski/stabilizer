@@ -1,6 +1,7 @@
 #ifndef SABLE_CORE_TASK_HPP
 #define SABLE_CORE_TASK_HPP
 
+#include <numeric>
 #include <random>
 #include <tuple>
 #include <vector>
@@ -22,7 +23,7 @@ class Runner
     typedef std::chrono::milliseconds SpeedUnit;
     typedef std::chrono::duration<double, std::milli> RunDuration;
 
-    ThreadPool<float> pool;
+    ThreadPool<RunDuration> pool;
 
     FunctionHandler<Func, Args...> func_handler;
 
@@ -42,13 +43,14 @@ class Runner
         auto t2 = std::chrono::high_resolution_clock::now();
 
         auto ms = std::chrono::duration_cast<SpeedUnit>(t2 - t1);
+
         return static_cast<RunDuration>(ms);
     }
 
 public:
-    Runner(Func&& func, Args&&... arg) : 
-        func_handler(f, a...),
-        pool() { }
+    Runner(Func&& func, Args&&... args) : pool(),
+        func_handler(func, args...)
+        { }
 
     void run(size_t n)
     {
@@ -56,7 +58,7 @@ public:
 
         for (size_t i = 0; i < n; i++)
         {
-            pool.push(std::move(&Runner<Func, Args...>::run_task));
+            pool.push([&]() { return run_task(); });
         }
 
         // sync back threads
@@ -66,21 +68,10 @@ public:
 
     float runtime()
     {
-        float sum = 0;
-        float size = 0;
-        ThreadSafeQueue<float> q = pool.get_outputs();
+        auto q = pool.get_outputs();
 
-        float curr;
-
-        while (!q.empty())
-        {
-            q.pop(curr);
-            sum += curr;
-            size += 1;
-        }
-
-        return sum / size;
-}
+        return std::reduce(q.begin(), q.end()).count() / q.size();
+    }
 
 };
 

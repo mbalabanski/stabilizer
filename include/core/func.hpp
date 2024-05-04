@@ -5,6 +5,8 @@
 #include <tuple>
 #include <utility>
 
+#include <iostream>
+
 namespace sable
 {
 namespace core
@@ -25,8 +27,7 @@ class FunctionHandler
 public:
     FunctionHandler(Func&& f, Args&&... a) : 
         eval_func(std::forward<Func>(f)),
-        args(std::forward<Args...>(a...))
-    { }
+        args(std::forward<Args...>(a)...) { }
 
     void operator() ()
     {

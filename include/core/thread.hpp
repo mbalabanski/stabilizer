@@ -9,6 +9,8 @@
 #include <thread>
 #include <vector>
 
+#include <iostream>
+
 namespace sable
 {
 namespace core
@@ -17,22 +19,25 @@ namespace core
 /**
  * @brief RAII wrapper for std::thread
  */
-class Thread
+class ThreadJoiner
 {
-    std::thread t;
+    std::vector<std::thread>& vec;
 
 public:
 
-    Thread(std::thread&& t_) : t(std::move(t_)) { }
-    Thread(const Thread& other) = delete;
+    explicit ThreadJoiner(std::vector<std::thread>& ts) : vec(ts) { }
+    ThreadJoiner(const ThreadJoiner& other) = delete;
 
-    Thread operator= (const Thread& other) = delete;
+    ThreadJoiner operator= (const ThreadJoiner& other) = delete;
 
-    ~Thread()
+    ~ThreadJoiner()
     {
-        if (t.joinable())
+        for (int i = 0; i < vec.size(); i++)
         {
-            t.join();
+            if (vec[i].joinable())
+            {
+                vec[i].join();
+            }
         }
     }
 
@@ -73,17 +78,6 @@ public:
     }
 };
 
-template<typename T>
-class ThreadSafeVector
-{
-    std::mutex mut;
-    std::vector<T> vec;
-    std::condition_variable cond;
-
-public:
-
-};
-
 /**
  * @brief Implements a thread pool structure
  * 
@@ -95,7 +89,9 @@ class ThreadPool
     std::atomic<bool> done;
     std::mutex queue_accessor;
     ThreadSafeQueue<std::function<T()>> tasks;
-    std::vector<Thread> threads;
+
+    ThreadJoiner joiner;
+    std::vector<std::thread> threads;
 
     ThreadSafeQueue<T> out;
 
@@ -126,7 +122,7 @@ class ThreadPool
 
 public:
 
-    ThreadPool(const size_t size = std::thread::hardware_concurrency())
+    ThreadPool(const size_t size = std::thread::hardware_concurrency()) : threads(), joiner(threads)
     {
         // initialize threads
         try
@@ -134,7 +130,7 @@ public:
             for (size_t i = 0; i < size; i++)
             {
                 threads.push_back(
-                    Thread(std::thread(&ThreadPool::run_task, this))
+                    std::thread(&ThreadPool::run_task, this)
                 );
             }
         }
@@ -148,22 +144,32 @@ public:
 
     ThreadPool(const ThreadPool& other) = delete;
 
-    template<typename FunctionType>
-    void push(FunctionType&& t)
+    void push(std::function<T()> f)
     {
-        tasks.push(std::function<T()>(f));
+        tasks.push(f);
     }
 
-    ThreadSafeQueue<T> get_outputs()
+    std::vector<T> get_outputs()
     {
-        return out;
+        // pop all items in queue and add to vector
+        std::vector<T> out_vec;
+
+        T curr;
+
+        while (!out.empty())
+        {
+            out.pop(curr);
+            out_vec.push_back(curr);
+        }
+
+        return out_vec;
     }
 
     ThreadPool& operator=(const ThreadPool& other) = delete;
 
-    std::atomic<bool> finished()
+    bool finished()
     {
-        return done;
+        return done.load(std::memory_order_acquire);
     }
 
 
