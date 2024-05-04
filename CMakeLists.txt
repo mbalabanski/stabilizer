@@ -34,7 +34,7 @@ foreach(dir ${INCLUDES})
 endforeach()
 
 
-add_library(${PROJECT_N} ${SRCS})
+add_library(${PROJECT_N} SHARED ${SRCS})
 target_include_directories(${PROJECT_N} PUBLIC include)
 
 # Tests

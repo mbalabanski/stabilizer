@@ -23,9 +23,16 @@ class FunctionHandler
     std::tuple<Args...> args;
 
 public:
-    FunctionHandler(Func&& f, Args&&... a);
+    FunctionHandler(Func&& f, Args&&... a) : 
+        eval_func(std::forward<Func>(f)),
+        args(std::forward<Args...>(a...))
+    { }
 
-    void operator() ();
+    void operator() ()
+    {
+        std::apply(eval_func, args);
+    }
+
 
 };
 

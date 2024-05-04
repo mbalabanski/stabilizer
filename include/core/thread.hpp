@@ -23,12 +23,18 @@ class Thread
 
 public:
 
-    Thread(std::thread&& t_);
+    Thread(std::thread&& t_) : t(std::move(t_)) { }
     Thread(const Thread& other) = delete;
 
     Thread operator= (const Thread& other) = delete;
 
-    ~Thread();
+    ~Thread()
+    {
+        if (t.joinable())
+        {
+            t.join();
+        }
+    }
 
 };
 
@@ -46,10 +52,25 @@ class ThreadSafeQueue
 
 public:
 
-    void push(T val);
-    void pop(T& out);
+    void push(T val)
+    {
+        std::lock_guard<std::mutex> lock(mut);
+        queue.push(val);
+        cond.notify_one();
+    }
 
-    bool empty();
+    void pop(T& out)
+    {
+        std::unique_lock<std::mutex> lock(mut);
+        cond.wait(lock, [&] { return !queue.empty(); });
+        out = std::move(queue.front());
+        queue.pop();
+    }
+
+    bool empty()
+    {
+        return queue.empty();
+    }
 };
 
 template<typename T>
@@ -81,23 +102,75 @@ class ThreadPool
     /**
      * @brief Run task for each thread in ```ThreadPool::threads```
      */
-    void run_task();
+    void run_task()
+    {
+        while (!done)
+        {
+            // while not done, keep trying to perform tasks
+            std::function<T()> task;
+            tasks.pop(task);
+
+            if (task)
+            {
+                T task_out(task());
+                out.push(task_out);
+            }
+            else
+            {
+                // all tasks are taken
+                std::this_thread::yield();
+            }
+        }
+    }
+
 
 public:
 
-    ThreadPool(const size_t size = std::thread::hardware_concurrency());
+    ThreadPool(const size_t size = std::thread::hardware_concurrency())
+    {
+        // initialize threads
+        try
+        {
+            for (size_t i = 0; i < size; i++)
+            {
+                threads.push_back(
+                    Thread(std::thread(&ThreadPool::run_task, this))
+                );
+            }
+        }
+        catch(const std::exception& e)
+        {
+            done = true;
+            throw;
+        }
+    }
+
+
     ThreadPool(const ThreadPool& other) = delete;
 
     template<typename FunctionType>
-    void push(FunctionType& t);
+    void push(FunctionType&& t)
+    {
+        tasks.push(std::function<T()>(f));
+    }
 
-    ThreadSafeQueue<T> get_outputs();
+    ThreadSafeQueue<T> get_outputs()
+    {
+        return out;
+    }
 
     ThreadPool& operator=(const ThreadPool& other) = delete;
 
-    std::atomic<bool> finished();
+    std::atomic<bool> finished()
+    {
+        return done;
+    }
 
-    ~ThreadPool();
+
+    ~ThreadPool()
+    {
+        done = true;
+    }
 };
 
 
