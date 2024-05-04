@@ -9,9 +9,6 @@ namespace core
 
 Thread::Thread(std::thread&& t_) : t(std::move(t_)) { }
 
-Thread::Thread(const Thread& other) = delete;
-Thread Thread::operator=(const Thread& other) = delete;
-
 Thread::~Thread() 
 {
     if (t.joinable())
@@ -40,10 +37,16 @@ void ThreadSafeQueue<T>::pop(T& out)
     queue.pop();
 }
 
+template<typename T>
+bool ThreadSafeQueue<T>::empty()
+{
+    return queue.empty();
+}
+
 // ThreadPool
 
 template<typename T>
-ThreadPool<T>::ThreadPool(size_t size = std::thread::hardware_concurrency()) : done(false) 
+ThreadPool<T>::ThreadPool(const size_t size) : done(false) 
 { 
     // initialize threads
     try
@@ -58,13 +61,9 @@ ThreadPool<T>::ThreadPool(size_t size = std::thread::hardware_concurrency()) : d
     catch(const std::exception& e)
     {
         done = true;
-        std::cerr << e.what() << '\n';
         throw;
     }
 }
-
-template<typename T>
-ThreadPool<T>::ThreadPool(const ThreadPool& other) = delete;
 
 template<typename T>
 void ThreadPool<T>::run_task()
@@ -96,10 +95,24 @@ void ThreadPool<T>::push(FunctionType& f)
 }
 
 template<typename T>
+ThreadSafeQueue<T> ThreadPool<T>::get_outputs()
+{
+    return out;
+}
+
+template<typename T>
+std::atomic<bool> ThreadPool<T>::finished()
+{
+    return done;
+}
+
+template<typename T>
 ThreadPool<T>::~ThreadPool()
 {
     done = true;
 }
+
+
 
 } // namespace core
 } // namespace sable

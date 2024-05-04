@@ -3,7 +3,9 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <functional>
 #include <mutex>
+#include <queue>
 #include <thread>
 #include <vector>
 
@@ -22,9 +24,9 @@ class Thread
 public:
 
     Thread(std::thread&& t_);
-    Thread(const Thread& other);
+    Thread(const Thread& other) = delete;
 
-    Thread operator= (const Thread& other);
+    Thread operator= (const Thread& other) = delete;
 
     ~Thread();
 
@@ -47,6 +49,7 @@ public:
     void push(T val);
     void pop(T& out);
 
+    bool empty();
 };
 
 template<typename T>
@@ -77,24 +80,27 @@ class ThreadPool
 
     /**
      * @brief Run task for each thread in ```ThreadPool::threads```
-     * 
      */
     void run_task();
 
 public:
 
     ThreadPool(const size_t size = std::thread::hardware_concurrency());
-    ThreadPool(const ThreadPool& other);
+    ThreadPool(const ThreadPool& other) = delete;
 
     template<typename FunctionType>
     void push(FunctionType& t);
 
     ThreadSafeQueue<T> get_outputs();
 
-    ThreadPool& operator=(const ThreadPool& other);
+    ThreadPool& operator=(const ThreadPool& other) = delete;
+
+    std::atomic<bool> finished();
 
     ~ThreadPool();
 };
+
+
 
 
 

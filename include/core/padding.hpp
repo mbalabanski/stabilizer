@@ -5,45 +5,44 @@
 
 namespace sable
 {
-
 namespace core
 {
 
 /**
  * @brief Defines a padding on the stack of arbitrary size ```size```
  * 
- * @tparam size the size of the padding block in bytes
  */
-template<const size_t size>
 class StackPadding
 {
-    std::unique_ptr<unsigned char> padding;
-    
+    // do not deallocate
+    unsigned char* stack_ptr;
+    const size_t size;
+
 public:
 
-    StackPadding();
-    StackPadding(const StackPadding& other);
+    StackPadding(const size_t size);
+    StackPadding(const StackPadding& other) = delete;
 
-    StackPadding& operator= (const StackPadding<size>& other);
+    StackPadding& operator= (const StackPadding& other) = delete;
 
 };
 
 /**
  * @brief Defines a padding on the heap of arbitrary size ```size```
  * 
- * @tparam size the size of the padding block in bytes
+ * 
  */
-template<const size_t size>
 class HeapPadding
 {
     std::unique_ptr<unsigned char> padding;
+    const size_t size;
 
 public:
 
-    HeapPadding();
-    HeapPadding(const HeapPadding<size>& other);
+    HeapPadding(const size_t size);
+    HeapPadding(const HeapPadding& other) = delete;
 
-    HeapPadding& operator= (const HeapPadding<size>& other);
+    HeapPadding& operator= (const HeapPadding& other) = delete;
 
 };
 

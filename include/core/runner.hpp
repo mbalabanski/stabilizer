@@ -1,13 +1,18 @@
 #ifndef SABLE_CORE_TASK_HPP
 #define SABLE_CORE_TASK_HPP
 
+#include <random>
+#include <tuple>
+#include <vector>
+
+#include <core/func.hpp>
+#include <core/padding.hpp>
 #include <core/thread.hpp>
 
 namespace sable
 {
 namespace core
 {
-    
 
 template<typename Func, typename... Args>
 class Runner
@@ -17,15 +22,16 @@ class Runner
 
     ThreadPool<float> pool;
 
-    Func eval_func;
-    Args args;
+    FunctionHandler<Func, Args...> func_handler;
 
     RunDuration run_task();
 
 public:
-    Runner(Func func, Args... arg);
+    Runner(Func&& func, Args&&... arg);
 
-    void run();
+    void run(size_t n);
+
+    float runtime();
 };
 
 
