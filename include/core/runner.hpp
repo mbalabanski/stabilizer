@@ -7,8 +7,9 @@
 #include <vector>
 
 #include <core/func.hpp>
-#include <core/padding.hpp>
 #include <core/thread.hpp>
+
+#include <iostream>
 
 namespace sable
 {
@@ -35,8 +36,11 @@ class Runner
         const size_t stack_size = dist(rng), heap_size = dist(rng);
 
         // create stack & heap buffer
-        StackPadding stack_padding(stack_size);
-        HeapPadding  heap_padding (heap_size);
+        size_t* stack_padding = (size_t*) alloca(sizeof(size_t) * stack_size);
+        std::unique_ptr<size_t> heap_padding(new size_t[heap_size]);
+        
+        
+        //HeapPadding  heap_padding (heap_size);
 
         auto t1 = std::chrono::high_resolution_clock::now();
         func_handler();
@@ -62,13 +66,17 @@ public:
         }
 
         // sync back threads
-        while (!pool.finished()) { }
     }
 
 
     float runtime()
     {
         auto q = pool.get_outputs();
+
+        for (auto item : q)
+        {
+            std::cout << item.count() << "\n";
+        }
 
         return std::reduce(q.begin(), q.end()).count() / q.size();
     }

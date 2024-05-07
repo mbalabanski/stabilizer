@@ -64,12 +64,15 @@ public:
         cond.notify_one();
     }
 
-    void pop(T& out)
+    bool try_pop(T& out)
     {
         std::unique_lock<std::mutex> lock(mut);
         cond.wait(lock, [&] { return !queue.empty(); });
+
         out = std::move(queue.front());
         queue.pop();
+
+        return true;
     }
 
     bool empty()
@@ -87,6 +90,7 @@ template<typename T>
 class ThreadPool
 {
     std::atomic<bool> done;
+
     std::mutex queue_accessor;
     ThreadSafeQueue<std::function<T()>> tasks;
 
@@ -104,12 +108,11 @@ class ThreadPool
         {
             // while not done, keep trying to perform tasks
             std::function<T()> task;
-            tasks.pop(task);
+            tasks.try_pop(task);
 
             if (task)
             {
-                T task_out(task());
-                out.push(task_out);
+                task();
             }
             else
             {
@@ -122,7 +125,8 @@ class ThreadPool
 
 public:
 
-    ThreadPool(const size_t size = std::thread::hardware_concurrency()) : threads(), joiner(threads)
+    ThreadPool(const size_t size = std::thread::hardware_concurrency()) : 
+        threads(), joiner(threads), done(false)
     {
         // initialize threads
         try
@@ -130,7 +134,9 @@ public:
             for (size_t i = 0; i < size; i++)
             {
                 threads.push_back(
-                    std::thread(&ThreadPool::run_task, this)
+                    std::thread([&]() {
+                        ThreadPool<T>::run_task(); 
+                    })
                 );
             }
         }
@@ -158,7 +164,7 @@ public:
 
         while (!out.empty())
         {
-            out.pop(curr);
+            out.try_pop(curr);
             out_vec.push_back(curr);
         }
 
@@ -169,7 +175,7 @@ public:
 
     bool finished()
     {
-        return done.load(std::memory_order_acquire);
+        return done.load();
     }
 
 
