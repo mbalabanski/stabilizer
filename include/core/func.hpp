@@ -13,28 +13,20 @@ namespace core
 {
 
 /**
- * @brief Stores a function and arguments
- * 
- * @tparam Func the function type
- * @tparam Args the argument types
+ * @brief Stores a function and arguments, where Function is a pure function
  */
-template<typename Func, typename... Args>
 class FunctionHandler
 {
-    std::function<void(Args...)> eval_func;
-    std::tuple<Args...> args;
+    void (*eval_func)();
 
 public:
-    FunctionHandler(Func&& f, Args&&... a) : 
-        eval_func(std::forward<Func>(f)),
-        args(std::forward<Args...>(a)...) { }
+    FunctionHandler(void (*func)()) : 
+        eval_func(func) { }
 
     void operator() ()
     {
-        std::apply(eval_func, args);
+        eval_func();
     }
-
-
 };
 
 } // core

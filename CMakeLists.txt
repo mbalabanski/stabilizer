@@ -37,6 +37,14 @@ endforeach()
 add_library(${PROJECT_N} SHARED ${SRCS})
 target_include_directories(${PROJECT_N} PUBLIC include)
 
+
+find_package(Boost REQUIRED)
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS}) 
+    target_link_libraries(${PROJECT_N} ${Boost_LIBRARIES})
+endif()
+
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)
   target_compile_options(${PROJECT_N} PUBLIC "-pthread")
@@ -50,3 +58,8 @@ endif()
 add_executable(WaitTest test/wait.cpp)
 target_link_libraries(WaitTest ${PROJECT_N})
 add_test(NAME WaitTest COMMAND WaitTest)
+
+
+add_executable(CalcTest test/calc_test.cpp)
+target_link_libraries(CalcTest ${PROJECT_N})
+add_test(NAME CalcTest COMMAND CalcTest)

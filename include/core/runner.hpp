@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include <stats/single_var_stats.hpp>
+
 namespace sable
 {
 namespace core
@@ -18,15 +20,15 @@ namespace core
 
 thread_local std::mt19937 rng;
 
-template<typename Func, typename... Args>
 class Runner
 {
-    typedef std::chrono::milliseconds SpeedUnit;
-    typedef std::chrono::duration<double, std::milli> RunDuration;
+    typedef std::chrono::nanoseconds SpeedUnit;
+    typedef std::chrono::duration<double, std::nano> RunDuration;
 
-    ThreadPool<RunDuration> pool;
+    //ThreadPool<RunDuration> pool;
+    std::vector<RunDuration> runtimes;
 
-    FunctionHandler<Func, Args...> func_handler;
+    FunctionHandler func_handler;
 
     RunDuration run_task()
     {
@@ -39,8 +41,6 @@ class Runner
         size_t* stack_padding = (size_t*) alloca(sizeof(size_t) * stack_size);
         std::unique_ptr<size_t> heap_padding(new size_t[heap_size]);
         
-        
-        //HeapPadding  heap_padding (heap_size);
 
         auto t1 = std::chrono::high_resolution_clock::now();
         func_handler();
@@ -52,33 +52,41 @@ class Runner
     }
 
 public:
-    Runner(Func&& func, Args&&... args) : pool(),
-        func_handler(func, args...)
-        { }
+    Runner(void (*func)()) : func_handler(func) { }
 
     void run(size_t n)
     {
         // push n number of runners
 
+        // for (size_t i = 0; i < n; i++)
+        // {
+        //     pool.push([&]() { return run_task(); });
+        // }
+
+        // single threaded
+
+        RunDuration r;
+
         for (size_t i = 0; i < n; i++)
         {
-            pool.push([&]() { return run_task(); });
+            r = run_task();
+            runtimes.push_back(r);
         }
 
         // sync back threads
     }
 
 
-    float runtime()
+    stats::SingleVarStats runtime()
     {
-        auto q = pool.get_outputs();
+        std::vector<double> runtimes_as_double(runtimes.size());
+        std::transform(
+            runtimes.begin(), runtimes.end(), 
+            runtimes_as_double.begin(), 
+            [](RunDuration item) {return item.count(); }
+        );
 
-        for (auto item : q)
-        {
-            std::cout << item.count() << "\n";
-        }
-
-        return std::reduce(q.begin(), q.end()).count() / q.size();
+        return stats::calc_stats(runtimes_as_double);
     }
 
 };

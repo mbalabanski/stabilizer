@@ -3,4 +3,6 @@
 
 #include <core/runner.hpp>
 
+#include <runtime.hpp>
+
 #endif
