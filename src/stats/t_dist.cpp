@@ -44,14 +44,9 @@ double TDistribution::statistic(double val)
     return (val - mu) / sigma;
 }
 
-double TDistribution::lt_cdf(double t_statistic)
+double TDistribution::cdf(double t_statistic)
 {
     return boost::math::cdf(dist, t_statistic);
-}
-
-double TDistribution::gt_cdf(double t_statistic)
-{
-    return boost::math::cdf(boost::math::complement(dist, t_statistic));
 }
 
 } // namespace stats

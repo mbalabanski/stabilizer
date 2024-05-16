@@ -29,8 +29,7 @@ HypothesisTest compare_runtime(
 
     std::cout << "T-Test statistic: " << stat << "\n";
 
-    double prob = tdist_diff.lt_cdf(stat);
-    double gt_prob = tdist_diff.gt_cdf(stat);
+    double prob = tdist_diff.cdf(stat);
 
     std::cout << "Probability: " << prob << "\n";
 

@@ -46,8 +46,7 @@ public:
 
     double statistic(double val);
 
-    double lt_cdf(double t_statistic);
-    double gt_cdf(double t_statistic);
+    double cdf(double t_statistic);
 };
 
 
