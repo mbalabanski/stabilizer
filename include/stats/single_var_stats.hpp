@@ -15,7 +15,7 @@ namespace
 {
 
 template<typename T>
-T calc_variance(const std::vector<T>& vec, const double mu, const size_t n)
+auto calc_variance(const std::vector<T>& vec, const double mu, const size_t n) -> T
 {
     if (n <= 1) { return static_cast<T>(0); }
 
@@ -24,7 +24,7 @@ T calc_variance(const std::vector<T>& vec, const double mu, const size_t n)
         return ((val - mu) * (val - mu) / (n - 1));
     };
 
-    return static_cast<T>(sqrtl(std::transform_reduce(vec.begin(), vec.end(), 0, std::plus{}, func ) / n));
+    return static_cast<T>(sqrtl(std::transform_reduce(vec.begin(), vec.end(), 0.0, std::plus{}, func ) ));
 }
    
 template double calc_variance<double>(const std::vector<double>& vec, const double mu, const size_t );
