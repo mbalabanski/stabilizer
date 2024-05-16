@@ -32,30 +32,28 @@ void run_func_unroll_dependency()
 
 int main()
 {
-    const size_t n = 1028;
+    const size_t n = 128;
 
-    auto test_results = static_cast<int>(
+    auto test_results = static_cast<unsigned int>(
         sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n)
     );
-
-    std::cout << "Test results: \n";
 
     if (test_results == 0)
     {
         std::cout << "failed to reject null hypothesis\n";
     }
 
-    if (test_results & 0b001 == 0b001)
+    if ((test_results & 0b001) == 0b001)
     {
         std::cout << "Alternate hypothesis not equal - pass\n";
     }
 
-    if (test_results & 0b010 == 0b010)
+    if ((test_results & 0b010) == 0b010)
     {
         std::cout << "Alternate hypothesis greater than - pass\n";
     }
 
-    if (test_results & 0b100 == 0b100)
+    if ((test_results & 0b100) == 0b100)
     {
         std::cout << "Alternate hypothesis less than - pass\n";
     }
