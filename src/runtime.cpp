@@ -15,8 +15,8 @@ HypothesisTest compare_runtime(
 
     auto rt1 = run1.runtime(), rt2 = run2.runtime();
 
-    std::cout << "Runtime 1: mu: " << rt1.mu << ", sigma: " << rt1.sigma << ", n: " << rt1.n << "\n";
-    std::cout << "Runtime 2: mu: " << rt2.mu << ", sigma: " << rt2.sigma << ", n: " << rt2.n << "\n";
+    std::cout << "Runtime 1: mu: " << rt1.mu << "ns, sigma: " << rt1.sigma << "ns, n: " << rt1.n << "\n";
+    std::cout << "Runtime 2: mu: " << rt2.mu << "ns, sigma: " << rt2.sigma << "ns, n: " << rt2.n << "\n";
 
     // run t test with two runtimes
 
