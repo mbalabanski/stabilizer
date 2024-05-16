@@ -30,6 +30,8 @@ TestResult compare_runtime(
     const float alpha, const size_t n = 64
 );
 
+void output_test_result(const TestResult& result);
+
 
 } // namespace sable
 

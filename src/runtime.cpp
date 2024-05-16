@@ -40,4 +40,44 @@ TestResult compare_runtime(
     };
 }
 
+void output_test_result(const TestResult& result)
+{
+    std::cout << "Test results: \n";
+
+    std::cout << 
+        "Runtime 1: mu: " << result.runtime1.mu << 
+        "ns, sigma: " << result.runtime1.sigma << 
+        "ns, n: " << result.runtime1.n << "\n";
+    std::cout << 
+        "Runtime 2: mu: " << result.runtime2.mu << 
+        "ns, sigma: " << result.runtime2.sigma << 
+        "ns, n: " << result.runtime2.n << "\n";
+
+    std::cout << "T-Test statistic: " << result.test_statistic << "\n";
+    std::cout << "Probability: " << result.prob << "\n";
+
+    auto test_results = static_cast<unsigned int>(result.hypotheses);
+
+    if (test_results == 0)
+    {
+        std::cout << "Failed to reject null hypothesis\n";
+    }
+
+    if ((test_results & 0b001) == 0b001)
+    {
+        std::cout << "Alternate hypothesis not equal - pass\n";
+    }
+
+    if ((test_results & 0b010) == 0b010)
+    {
+        std::cout << "Alternate hypothesis greater than - pass\n";
+    }
+
+    if ((test_results & 0b100) == 0b100)
+    {
+        std::cout << "Alternate hypothesis less than - pass\n";
+    }
+
+}
+
 }

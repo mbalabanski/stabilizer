@@ -34,29 +34,9 @@ int main()
 {
     const size_t n = 500;
 
-    auto test_results = static_cast<unsigned int>(
-        sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n).hypotheses
-    );
+    auto test_results = sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n);
 
-    if (test_results == 0)
-    {
-        std::cout << "failed to reject null hypothesis\n";
-    }
-
-    if ((test_results & 0b001) == 0b001)
-    {
-        std::cout << "Alternate hypothesis not equal - pass\n";
-    }
-
-    if ((test_results & 0b010) == 0b010)
-    {
-        std::cout << "Alternate hypothesis greater than - pass\n";
-    }
-
-    if ((test_results & 0b100) == 0b100)
-    {
-        std::cout << "Alternate hypothesis less than - pass\n";
-    }
+    sable::output_test_result(test_results);
 
     return 0;
 }
