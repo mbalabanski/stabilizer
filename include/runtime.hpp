@@ -19,7 +19,7 @@ enum HypothesisTest
 
 HypothesisTest compare_runtime(
     void (*func1)(), void (*func2)(),
-    const float alpha
+    const float alpha, const size_t n = 64
 );
 
 

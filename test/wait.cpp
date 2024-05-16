@@ -8,6 +8,9 @@
 #include <sable.hpp>
 
 
+const size_t runtime1 = 10, runtime2 = 90;
+const size_t trials = 1028;
+
 void run_func()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -15,15 +18,14 @@ void run_func()
 
 void run_func2()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
 
 int main()
 {
-    const size_t n = 64;
 
     auto test_results = static_cast<int>(
-        sable::compare_runtime(run_func, run_func2, 0.05)
+        sable::compare_runtime(run_func, run_func2, 0.05, trials)
     );
 
     std::cout << "Test results: " << test_results << "\n";
