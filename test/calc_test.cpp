@@ -35,7 +35,7 @@ int main()
     const size_t n = 500;
 
     auto test_results = static_cast<unsigned int>(
-        sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n)
+        sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n).hypotheses
     );
 
     if (test_results == 0)

@@ -17,7 +17,15 @@ enum HypothesisTest
     AlternateLt  = 1 << 2
 };
 
-HypothesisTest compare_runtime(
+struct TestResult
+{
+    stats::SingleVarStats runtime1, runtime2;
+    double prob;
+    double test_statistic;
+    HypothesisTest hypotheses;
+};
+
+TestResult compare_runtime(
     void (*func1)(), void (*func2)(),
     const float alpha, const size_t n = 64
 );

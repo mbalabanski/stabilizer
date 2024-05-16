@@ -3,7 +3,7 @@
 namespace sable
 {
 
-HypothesisTest compare_runtime(
+TestResult compare_runtime(
     void (*func1)(), void (*func2)(), 
     const float alpha, const size_t n
 )
@@ -15,9 +15,6 @@ HypothesisTest compare_runtime(
 
     auto rt1 = run1.runtime(), rt2 = run2.runtime();
 
-    std::cout << "Runtime 1: mu: " << rt1.mu << "ns, sigma: " << rt1.sigma << "ns, n: " << rt1.n << "\n";
-    std::cout << "Runtime 2: mu: " << rt2.mu << "ns, sigma: " << rt2.sigma << "ns, n: " << rt2.n << "\n";
-
     // run t test with two runtimes
 
     stats::TDistribution tdist_diff(
@@ -27,11 +24,7 @@ HypothesisTest compare_runtime(
 
     double stat = tdist_diff.statistic(0.0);
 
-    std::cout << "T-Test statistic: " << stat << "\n";
-
     double prob = tdist_diff.cdf(stat);
-
-    std::cout << "Probability: " << prob << "\n";
 
     unsigned int result = HypothesisTest::Null;
 
@@ -39,7 +32,12 @@ HypothesisTest compare_runtime(
     if (prob < alpha)       result |= HypothesisTest::AlternateLt;
     if ((1 - prob) < alpha) result |= HypothesisTest::AlternateGt;
 
-    return static_cast<HypothesisTest>(result);
+    return TestResult{
+        rt1, rt2, // runtimes
+        prob, // probability
+        stat, // test statistic
+        static_cast<HypothesisTest>(result) // hypotheses test result
+    };
 }
 
 }

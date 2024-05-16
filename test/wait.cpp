@@ -25,7 +25,7 @@ int main()
 {
 
     auto test_results = static_cast<int>(
-        sable::compare_runtime(run_func, run_func2, 0.05, trials)
+        sable::compare_runtime(run_func, run_func2, 0.05, trials).hypotheses
     );
 
     std::cout << "Test results: \n";
