@@ -9,16 +9,16 @@
 
 
 const size_t runtime1 = 10, runtime2 = 90;
-const size_t trials = 100;
+const size_t trials = 2560;
 
 void run_func()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::microseconds(10));
 }
 
 void run_func2()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(std::chrono::microseconds(14));
 }
 
 int main()

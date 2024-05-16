@@ -33,7 +33,7 @@ class Runner
     RunDuration run_task()
     {
         // generate random padding for stack and heap
-        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 16);
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 128);
 
         const size_t stack_size = dist(rng), heap_size = dist(rng);
 
