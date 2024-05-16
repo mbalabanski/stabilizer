@@ -24,7 +24,7 @@ int main()
     sable::core::Runner runner(run_func);
     runner.run(n);
 
-    std::cout << "Average runtime for " << n << " calls: " << runner.runtime() << "." << std::endl;
+    std::cout << "Average runtime for " << n << " calls: " << runner.runtime().mu << "." << std::endl;
 
     return 0;
 }

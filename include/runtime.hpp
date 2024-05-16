@@ -12,9 +12,9 @@ namespace sable
 enum HypothesisTest
 {
     Null = 0,
-    AlternateNEq = 1 << 1,
-    AlternateGt  = 1 << 2,
-    AlternateLt  = 1 << 3
+    AlternateNEq = 1 << 0,
+    AlternateGt  = 1 << 1,
+    AlternateLt  = 1 << 2
 };
 
 HypothesisTest compare_runtime(

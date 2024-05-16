@@ -36,9 +36,10 @@ HypothesisTest compare_runtime(
 
     unsigned int result = HypothesisTest::Null;
 
-    if (1 - prob < alpha / 2 || prob < alpha / 2) result |= HypothesisTest::AlternateNEq;
-    if (prob < alpha)     result |= HypothesisTest::AlternateLt;
-    if (1 - prob < alpha) result |= HypothesisTest::AlternateGt;
+    if (1 - prob < alpha / 2 || prob < alpha / 2) 
+                            result |= HypothesisTest::AlternateNEq;
+    if (prob < alpha)       result |= HypothesisTest::AlternateLt;
+    if ((1 - prob) < alpha) result |= HypothesisTest::AlternateGt;
 
     return static_cast<HypothesisTest>(result);
 }

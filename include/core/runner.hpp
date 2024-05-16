@@ -40,7 +40,6 @@ class Runner
         // create stack & heap buffer
         size_t* stack_padding = (size_t*) alloca(sizeof(size_t) * stack_size);
         std::unique_ptr<size_t> heap_padding(new size_t[heap_size]);
-        
 
         auto t1 = std::chrono::high_resolution_clock::now();
         func_handler();
