@@ -67,3 +67,8 @@ add_test(NAME CalcTest COMMAND CalcTest)
 add_executable(WatchTest test/watch.cpp)
 target_link_libraries(WatchTest ${PROJECT_N})
 add_test(NAME WatchTest COMMAND WatchTest)
+
+
+add_executable(ConfusionMatrix test/confusion_matrix.cpp)
+target_link_libraries(ConfusionMatrix ${PROJECT_N})
+add_test(NAME ConfusionMatrix COMMAND ConfusionMatrix)

@@ -8,7 +8,7 @@
 #include <sable.hpp>
 
 const size_t runtime1 = 10, runtime2 = 90;
-const size_t trials = 500;
+const size_t trials = 40;
 
 void run_func()
 {
