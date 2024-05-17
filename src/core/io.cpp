@@ -6,6 +6,16 @@ namespace sable
 namespace core
 {
 
+namespace
+{
+
+inline bool is_file_empty(std::fstream& file)
+{
+    file.seekp(0, std::ios::end);
+    return file.tellg() == 0;
+}
+
+}
 
 void write_runtime_to_output(
     const std::string& name,
@@ -13,8 +23,13 @@ void write_runtime_to_output(
 )
 {
     std::fstream file;
+
+    if (!std::filesystem::exists("./sable/"))
+    {
+        std::filesystem::create_directory("./sable");
+    }
     
-    file.open("./sable/" + name + ".csv");
+    file.open("./sable/" + name + ".csv", std::fstream::out | std::fstream::in | std::fstream::app);
 
     if (!file.good())
     {
@@ -22,12 +37,12 @@ void write_runtime_to_output(
     }
 
     // check if empty file, then add csv headers
-    if (file.peek() == std::fstream::traits_type::eof())
+    if (is_file_empty(file))
     {
         file << "average (ns), stdev (ns), n" << std::endl;
     }
 
-    file << runtime_data.mu << ", " << runtime_data.sigma << ", " << runtime_data.n << std::endl;
+    file << runtime_data.mu << "," << runtime_data.sigma << "," << runtime_data.n << std::endl;
 
     file.close();
 }
@@ -60,17 +75,16 @@ std::optional<const stats::SingleVarStats> get_last_runtime(
     while(true)
 	{
 		file.unget(); //go back two chars
-		file.unget();
 		char in = file.get();
 		if(in == '\n')
 		{
-			file.getline(buf, ', ');
+			file.getline(buf, ',');
             avg = std::stod(buf);
 
-            file.getline(buf, ', ');
+            file.getline(buf, ',');
             stdev = std::stod(buf);
 
-            file.getline(buf, ', ');
+            file.getline(buf, ',');
             n = std::stoull(buf);
 
 			break;

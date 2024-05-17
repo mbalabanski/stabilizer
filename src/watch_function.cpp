@@ -11,6 +11,7 @@ std::optional<TestResult> watch_function(
     float alpha
 )
 {
+
     // get last function result
 
     auto prev_run = core::get_last_runtime(name);

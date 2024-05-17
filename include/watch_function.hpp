@@ -1,6 +1,7 @@
 #ifndef SABLE_WATCH_FUNCTION_HPP
 #define SABLE_WATCH_FUNCTION_HPP
 
+#include <filesystem>
 #include <optional>
 #include <string>
 

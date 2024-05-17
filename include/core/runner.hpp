@@ -18,7 +18,12 @@ namespace sable
 namespace core
 {
 
+namespace
+{
+
 thread_local std::mt19937 rng;
+
+}
 
 class Runner
 {

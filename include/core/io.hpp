@@ -2,6 +2,7 @@
 #define SABLE_CORE_IO_HPP
 
 #include <exception>
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>
