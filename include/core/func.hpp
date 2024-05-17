@@ -23,7 +23,7 @@ public:
     FunctionHandler(void (*func)()) : 
         eval_func(func) { }
 
-    void operator() ()
+    inline void operator() ()
     {
         eval_func();
     }
