@@ -63,3 +63,7 @@ add_test(NAME WaitTest COMMAND WaitTest)
 add_executable(CalcTest test/calc_test.cpp)
 target_link_libraries(CalcTest ${PROJECT_N})
 add_test(NAME CalcTest COMMAND CalcTest)
+
+add_executable(WatchTest test/watch.cpp)
+target_link_libraries(WatchTest ${PROJECT_N})
+add_test(NAME WatchTest COMMAND WatchTest)
