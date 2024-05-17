@@ -68,23 +68,25 @@ std::optional<const stats::SingleVarStats> get_last_runtime(
     double avg, stdev;
 
     // read in reverse order
-    file.seekg(EOF);
+    file.seekg(0, std::ios::end);
 
-    char* buf;
+    char buf[8];
 
     while(true)
 	{
 		file.unget(); //go back two chars
+        file.unget();
 		char in = file.get();
+
 		if(in == '\n')
 		{
-			file.getline(buf, ',');
+			file.getline(buf, 8, ',');
             avg = std::stod(buf);
 
-            file.getline(buf, ',');
+            file.getline(buf, 8, ',');
             stdev = std::stod(buf);
 
-            file.getline(buf, ',');
+            file.getline(buf, 8, '\n');
             n = std::stoull(buf);
 
 			break;

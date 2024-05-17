@@ -1,6 +1,8 @@
 #ifndef SABLE_CORE_IO_HPP
 #define SABLE_CORE_IO_HPP
 
+#include <iostream>
+
 #include <exception>
 #include <filesystem>
 #include <fstream>
