@@ -58,10 +58,11 @@ int main()
 
     // output confusion matrix
 
-    std::cout << "Confusion Matrix:\n\n";
-    std::cout << "  " << std::setw(4) << conf_matrix[0] << " | " << conf_matrix[1] << "\n";
-    std::cout << "   ---------\n";
-    std::cout << "  " << std::setw(4) << conf_matrix[2] << " | " << conf_matrix[3] << "\n\n";
+    std::cout << "\nConfusion Matrix:\n\n";
+    std::cout << std::setw(20) << "" << std::setw(4) << "H0" << " | " << std::setw(2) << "HA" << "\n";
+    std::cout << std::setw(20) << "Should not reject: " << std::setw(4) << conf_matrix[0] << " | " << conf_matrix[1] << "\n";
+    std::cout << std::setw(20) << "" << " ---------\n";
+    std::cout << std::setw(20) << "Should reject: " << std::setw(4) << conf_matrix[2] << " | " << conf_matrix[3] << "\n\n";
 
     return 0;
 }
