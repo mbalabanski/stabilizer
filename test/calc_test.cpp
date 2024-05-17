@@ -28,6 +28,8 @@ void run_func_unroll_dependency()
         sum3 += i + 2;
         sum4 += i + 3;
     }
+
+    sum1 + sum2 + sum3 + sum4;
 }
 
 int main()

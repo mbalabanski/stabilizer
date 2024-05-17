@@ -23,9 +23,10 @@ void run_func2()
 int main()
 {
 
-    auto test_results = sable::compare_runtime(run_func, run_func2, 0.05, trials);
+    auto test_results = sable::watch_function(std::string("WaitFunction"), run_func, trials, 0.05);
 
-    sable::output_test_result(test_results);
+    if (test_results)
+        sable::output_test_result(test_results.value());
 
     return 0;
 }

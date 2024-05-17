@@ -1,10 +1,9 @@
 #ifndef SABLE_STATS_1_VAR_STATS_HPP
 #define SABLE_STATS_1_VAR_STATS_HPP
 
+#include <cmath>
 #include <numeric>
 #include <vector>
-
-
 
 namespace sable
 {
@@ -34,7 +33,6 @@ template double calc_variance<double>(const std::vector<double>& vec, const doub
 struct SingleVarStats
 {
     size_t n;
-    double sum;
     double mu;
     double sigma;
 };
@@ -46,11 +44,10 @@ template<typename T>
 SingleVarStats calc_stats(const std::vector<T>& vec)
 {
     size_t n = vec.size();
-    T sum = std::reduce(vec.begin(), vec.end());
-    T mean = sum / n;
+    T mean = std::reduce(vec.begin(), vec.end()) / n;
     T variance = calc_variance(vec, mean, n);
     return SingleVarStats{
-        n, sum, mean, variance
+        n, mean, variance
     };
 }
 

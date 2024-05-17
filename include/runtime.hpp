@@ -30,6 +30,12 @@ TestResult compare_runtime(
     const float alpha, const size_t n = 64
 );
 
+TestResult compare_runtime(
+    const stats::SingleVarStats& rt1, 
+    const stats::SingleVarStats& rt2,
+    const float alpha
+);
+
 void output_test_result(const TestResult& result);
 
 

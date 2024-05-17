@@ -3,18 +3,13 @@
 namespace sable
 {
 
+
 TestResult compare_runtime(
-    void (*func1)(), void (*func2)(), 
-    const float alpha, const size_t n
+    const stats::SingleVarStats& rt1,
+    const stats::SingleVarStats& rt2,
+    const float alpha
 )
 {
-    core::Runner run1(func1), run2(func2);
-
-    run1.run(n);
-    run2.run(n);
-
-    auto rt1 = run1.runtime(), rt2 = run2.runtime();
-
     // run t test with two runtimes
 
     stats::TDistribution tdist_diff(
@@ -38,6 +33,19 @@ TestResult compare_runtime(
         stat, // test statistic
         static_cast<HypothesisTest>(result) // hypotheses test result
     };
+}
+
+TestResult compare_runtime(
+    void (*func1)(), void (*func2)(), 
+    const float alpha, const size_t n
+)
+{
+    core::Runner run1(func1), run2(func2);
+
+    run1.run(n);
+    run2.run(n);
+
+    return compare_runtime(run1.runtime(), run2.runtime(), alpha);
 }
 
 void output_test_result(const TestResult& result)
