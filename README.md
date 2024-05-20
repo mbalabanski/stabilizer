@@ -66,7 +66,40 @@ The hypotheses are summarized by the bitflags in the enum `sable::HypothesisTest
 
 To print results of a test to stdout, use `sable::output_test_result`.
 
-> For more examples, see tests: `test/wait.cpp` and `test/calc_test.cpp`.
+#### Example Usage
+
+```cpp
+
+void run_func()
+{
+    std::this_thread::sleep_for(std::chrono::microseconds(10));
+}
+
+void run_func2()
+{
+    std::this_thread::sleep_for(std::chrono::microseconds(14));
+}
+
+int main()
+{
+    auto test_results = sable::compare_runtime(
+        run_func, 
+        run_func2, 
+        0.05, // signficance level
+        100 // # of trials
+    );
+
+    sable::output_test_result(test_results);
+
+    return 0;
+}
+```
+
+> For more examples, see tests: `test/wait.cpp`, `test/calc_test.cpp`, and `test/confusion_matrix.cpp`.
+
+### `sable::watch_function`
+
+
 
 ### Further examples
 
