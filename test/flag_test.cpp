@@ -14,7 +14,9 @@ void run_func()
 
 int main()
 {
-    auto flag = sable::start_flag();
+    sable::Flag flag;
+
+    sable::start_flag(flag);
 
     run_func();
 

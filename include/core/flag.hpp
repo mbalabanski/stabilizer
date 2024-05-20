@@ -15,7 +15,7 @@ namespace core
 
 struct Flag
 {
-    std::chrono::steady_clock::time_point t1, t2;
+    std::chrono::system_clock::time_point t1, t2;
     bool started, ended;
 
     inline Runner::RunDuration elapsed_time()

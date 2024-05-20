@@ -10,9 +10,19 @@
 namespace sable
 {
 
-inline core::Flag start_flag();
+typedef core::Flag Flag;
 
-inline void end_flag(core::Flag& flag);
+inline void start_flag(Flag& flag)
+{
+    flag.started = true;
+    flag.t1 = std::chrono::high_resolution_clock::now();
+}
+
+inline void end_flag(Flag& flag)
+{
+    flag.t2 = std::chrono::high_resolution_clock::now();
+    flag.ended = true;
+}
    
 } // namespace sable
 
