@@ -151,6 +151,6 @@ int main()
 
 ### Further examples
 
-For further usage examples, see `tests/` directory.
+For further usage examples, see `test/` directory.
 
 Make any of the tests using `make [TestName]`
