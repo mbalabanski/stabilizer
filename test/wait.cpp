@@ -7,7 +7,6 @@
 
 #include <sable.hpp>
 
-const size_t runtime1 = 10, runtime2 = 90;
 const size_t trials = 2560;
 
 void run_func()
