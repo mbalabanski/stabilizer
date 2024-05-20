@@ -18,7 +18,9 @@ namespace core
 {
 
 /**
- * @brief Writes a new runtime data to a saved file
+ * @brief Writes a new runtime data to a saved file.  
+ * 
+ * @note  This function writes data to `sable/{name}.csv`
  * 
  * @param name function alias - determines where the data file is
  * @param runtime_data data to save
@@ -28,6 +30,13 @@ void write_runtime_to_output(
     const stats::SingleVarStats& runtime_data
 );
 
+/**
+ * @brief Get the last runtime data from `sable/{name}.csv`.
+ * 
+ * @param name function identifier
+ * @return std::optional<const stats::SingleVarStats> average, standard deviation, and # of trials in nanoseconds 
+ * if the data file can be read.  If not, returns nullopt
+ */
 std::optional<const stats::SingleVarStats> get_last_runtime(
     const std::string& name
 );

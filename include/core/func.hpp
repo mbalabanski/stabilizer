@@ -13,7 +13,7 @@ namespace core
 {
 
 /**
- * @brief Stores a function and arguments, where Function is a pure function
+ * @brief Stores a function pointer
  */
 class FunctionHandler
 {
