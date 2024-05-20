@@ -27,8 +27,12 @@ thread_local std::mt19937 rng;
 
 class Runner
 {
+    
+public:
     typedef std::chrono::nanoseconds SpeedUnit;
     typedef std::chrono::duration<double, std::nano> RunDuration;
+
+private:
 
     //ThreadPool<RunDuration> pool;
     std::vector<RunDuration> runtimes;

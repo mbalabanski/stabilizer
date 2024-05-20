@@ -33,4 +33,16 @@ std::optional<TestResult> watch_function(
     return compare_runtime(prev, curr_run, alpha);
 }
 
+// overload for watch_function using const char*, instead of string
+
+std::optional<TestResult> watch_function(
+    const char* name,
+    void (*func)(),
+    size_t trials,
+    float alpha
+) 
+{ 
+    return watch_function(std::string(name), func, trials, alpha); 
+}
+
 } // namespace sable
