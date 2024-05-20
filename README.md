@@ -18,7 +18,7 @@ Sable works by comparing the runtime of two functions by performing a student's 
 
 1. Samples must be random
 2. The sample must approximate a normal distribution
-3. Total population >> # of samples (10n)
+3. Each sample is independent of one another
 
 These are important to keep in mind during usage, especially when setting parameters such as number of trials, which can satistfy condition #2, to be greater than 30, by the [ Central Limit Theorem](https://en.wikipedia.org/wiki/Central_limit_theorem)
 
@@ -47,7 +47,7 @@ Finally, add:
 To compare the runtime of two functions, use `sable::compare_runtime`.
 
 ```cpp
-sable::TestResult result = sable::compare_runtime(
+sable::TestResult sable::compare_runtime(
     void() function1, 
     void() function2, 
     float significance_level, 
@@ -69,7 +69,6 @@ To print results of a test to stdout, use `sable::output_test_result`.
 #### Example Usage
 
 ```cpp
-
 void run_func()
 {
     std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -99,7 +98,56 @@ int main()
 
 ### `sable::watch_function`
 
+Sable watch function compares the functions current runtime, to its previous runtime.
 
+```cpp
+std::optional<TestResult> watch_function(
+    const std::string& identifier, 
+    void() func, 
+    size_t trials,
+    float alpha
+);
+```
+> #### Notes on Usage
+> _identifier_ - must be unique for each call
+>
+> _alpha_ - significance level - determines when null hypothesis should be rejected.  Usually 0.01, 0.05 or 0.10.
+>
+> _trials_ - should at least be greater than 30
+>
+> **Returns** - an option of `sable::TestResult`
+
+This function saves runtime data to a created file `./sable/[identifier].csv`.  This makes it necessary to have a unique identifier for each `watch_function` call.  
+
+In the event that no data file or `sable` directory exists, this function will create the file and path and write headings and runtime data to it.
+
+This function will run a student's t-test (like [`compare_runtime`](#sablecompare_runtime)) to determine if there is a difference in runtime from the previous execution.
+
+
+
+#### Returns
+
+This function returns `nullopt` when there is no existing data file (`sable/[identifier].csv`), or if it is unable to read from the file.  Otherwise, it returns the results of the student's t-test.
+
+#### Usage
+
+```cpp
+void run_func()
+{
+    const size_t duration = 40; // change between compilations
+    std::this_thread::sleep_for(std::chrono::microseconds(duration));
+}
+
+int main()
+{
+    auto test_results = sable::watch_function("WaitFunction", run_func, trials, 0.05);
+
+    if (test_results)
+        sable::output_test_result(test_results.value());
+
+    return 0;
+}
+```
 
 ### Further examples
 
