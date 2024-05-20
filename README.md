@@ -1,6 +1,6 @@
 # Sable
 
-Rigorous runtime performance analysis for c++ code.
+Runtime performance analysis for c++ code.
 
 This project was based off of [Stabilizer](https://people.cs.umass.edu/~emery/pubs/stabilizer-asplos13.pdf) ([Github](https://github.com/ccurtsinger/stabilizer/tree/master)). 
 
