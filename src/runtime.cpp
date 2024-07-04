@@ -3,7 +3,6 @@
 namespace sable
 {
 
-
 TestResult compare_runtime(
     const stats::SingleVarStats& rt1,
     const stats::SingleVarStats& rt2,
@@ -34,6 +33,8 @@ TestResult compare_runtime(
         static_cast<HypothesisTest>(result) // hypotheses test result
     };
 }
+
+
 
 TestResult compare_runtime(
     void (*func1)(), void (*func2)(), 

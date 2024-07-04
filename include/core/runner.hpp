@@ -4,10 +4,10 @@
 #include <numeric>
 #include <random>
 #include <tuple>
+#include <thread>
 #include <vector>
 
 #include <core/func.hpp>
-#include <core/thread.hpp>
 
 #include <iostream>
 
@@ -35,7 +35,6 @@ public:
 private:
 
     std::vector<RunDuration> runtimes;
-    std::mutex runtimes_accessor;
 
     FunctionHandler func_handler;
 
