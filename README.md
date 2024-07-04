@@ -96,6 +96,57 @@ int main()
 
 > For more examples, see tests: `test/wait.cpp`, `test/calc_test.cpp`, and `test/confusion_matrix.cpp`.
 
+### `sable::compare_runtime_multithreaded`
+
+Similar to `sable::compare_runtime`, except functions run in parallel to speed up evaluation time.
+
+```cpp
+sable::TestResult sable::compare_runtime_multithreaded(
+    void() function1, 
+    void() function2, 
+    float significance_level, 
+    size_t number_of_trials,
+    size_t threads
+);
+```
+
+#### Notes on Usage
+
+Because this feature relies on executing functions in parallel, the function being evaluated must be [pure](https://en.wikipedia.org/wiki/Pure_function), meaning that it shouldn't rely or modify outside variables during its execution.
+
+This ensures that when evaluating the function's runtime, there is no race condition or deadlock when accessing outside variables.
+
+Other notes on usage are the same as for `sable::compare_runtime`.
+
+#### Usage
+
+```cpp
+void run_func()
+{
+    std::this_thread::sleep_for(std::chrono::microseconds(10));
+}
+
+void run_func2()
+{
+    std::this_thread::sleep_for(std::chrono::microseconds(14));
+}
+
+int main()
+{
+    auto test_results = sable::compare_runtime_multithreaded(
+        run_func, 
+        run_func2, 
+        0.05, // signficance level
+        100, // # of trials
+        std::thread::hardware_concurrency() // # of threads
+    );
+
+    sable::output_test_result(test_results);
+
+    return 0;
+}
+```
+
 ### `sable::watch_function`
 
 Sable watch function compares the functions current runtime, to its previous runtime.
@@ -122,8 +173,6 @@ This function saves runtime data to a created file `./sable/[identifier].csv`.  
 In the event that no data file or `sable` directory exists, this function will create the file and path and write headings and runtime data to it.
 
 This function will run a student's t-test (like [`compare_runtime`](#sablecompare_runtime)) to determine if there is a difference in runtime from the previous execution.
-
-
 
 #### Returns
 
