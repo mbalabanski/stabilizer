@@ -36,7 +36,7 @@ int main()
 {
     const size_t n = 500;
 
-    auto test_results = sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05, n);
+    auto test_results = sable::compare_runtime(run_func, run_func_unroll_dependency, 0.05);
 
     sable::output_test_result(test_results);
 

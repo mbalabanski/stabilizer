@@ -34,17 +34,20 @@ public:
 
 private:
 
-    //ThreadPool<RunDuration> pool;
     std::vector<RunDuration> runtimes;
+    std::mutex runtimes_accessor;
 
     FunctionHandler func_handler;
 
     RunDuration run_task();
 
+    void run_single_thread(size_t n);
+    void run_multi_thread(size_t n, size_t threads=std::thread::hardware_concurrency());
+
 public:
     Runner(void (*func)()) : func_handler(func) { }
 
-    void run(size_t n);
+    void run(size_t n, bool multithreaded=false);
 
 
     stats::SingleVarStats runtime();

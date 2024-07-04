@@ -30,6 +30,12 @@ TestResult compare_runtime(
     const float alpha, const size_t n = 64
 );
 
+TestResult compare_runtime_multithreaded(
+    void (*func1)(), void (*func2)(),
+    const float alpha, const size_t n = 64,
+    const size_t threads = std::thread::hardware_concurrency()
+);
+
 TestResult compare_runtime(
     const stats::SingleVarStats& rt1, 
     const stats::SingleVarStats& rt2,

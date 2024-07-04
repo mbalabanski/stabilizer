@@ -75,3 +75,7 @@ add_test(NAME ConfusionMatrix COMMAND ConfusionMatrix)
 add_executable(FlagTest test/flag_test.cpp)
 target_link_libraries(FlagTest ${PROJECT_N})
 add_test(NAME FlagTest COMMAND FlagTest)
+
+add_executable(MultiThreaded test/multi_threaded.cpp)
+target_link_libraries(MultiThreaded ${PROJECT_N})
+add_test(NAME MultiThreaded COMMAND MultiThreaded)

@@ -48,6 +48,19 @@ TestResult compare_runtime(
     return compare_runtime(run1.runtime(), run2.runtime(), alpha);
 }
 
+TestResult compare_runtime_multithreaded(
+    void (*func1)(), void (*func2)(),
+    const float alpha, const size_t n,
+    const size_t threads
+)
+{
+    core::Runner run1(func1), run2(func2);
+    run1.run(n, true);
+    run2.run(n, true);
+
+    return compare_runtime(run1.runtime(), run2.runtime(), alpha);
+}
+
 void output_test_result(const TestResult& result)
 {
     std::cout << "Test results: \n";

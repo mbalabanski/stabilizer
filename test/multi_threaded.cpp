@@ -25,15 +25,13 @@ int main()
     
     sable::start_flag(flag);
 
-    auto test_results = sable::compare_runtime(run_func, run_func2, 0.05, trials);
+    auto test_results = sable::compare_runtime_multithreaded(run_func, run_func2, 0.05, trials);
 
     sable::end_flag(flag);
 
     std::cout << "Elapsed time: " << flag.elapsed_time().count() << "ns.\n";
-
-    sable::output_test_result(test_results);
-
     
+    sable::output_test_result(test_results);
 
     return 0;
 }

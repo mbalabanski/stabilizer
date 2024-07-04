@@ -1,5 +1,8 @@
 #include <core/runner.hpp>
 
+#include <boost/asio/thread_pool.hpp>
+#include <boost/asio/post.hpp>
+
 namespace sable
 {
 namespace core
@@ -26,8 +29,35 @@ Runner::RunDuration Runner::run_task()
     return static_cast<RunDuration>(ms);
 }
 
+void Runner::run_single_thread(size_t n)
+{
+    runtimes.resize(n);
 
-void Runner::run(size_t n)
+    for (size_t i = 0; i < n; i++)
+    {
+        runtimes[i] = run_task();
+    }
+}
+
+void Runner::run_multi_thread(size_t n, size_t threads)
+{
+    runtimes.resize(n);
+
+    // create multithreaded scope
+    boost::asio::thread_pool pool(threads);
+
+    for (int i = 0; i < n; i++)
+    {
+        boost::asio::post(pool, 
+        [&]{
+            runtimes[i] = run_task();
+        });
+    }
+    
+    pool.join();
+}
+
+void Runner::run(size_t n, bool multithreaded)
 {
     // push n number of runners
 
@@ -38,12 +68,14 @@ void Runner::run(size_t n)
 
     // single threaded
 
-    RunDuration r;
-
-    for (size_t i = 0; i < n; i++)
+    if (!multithreaded)
     {
-        r = run_task();
-        runtimes.push_back(r);
+        run_single_thread(n);
+    }
+
+    else
+    {
+        run_multi_thread(n);
     }
 
     // sync back threads
