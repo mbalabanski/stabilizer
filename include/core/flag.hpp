@@ -13,6 +13,10 @@ namespace sable
 namespace core
 {
 
+/**
+ * @brief Stores data for a single runtime flag
+ * 
+ */
 struct Flag
 {
     std::chrono::system_clock::time_point t1, t2;
