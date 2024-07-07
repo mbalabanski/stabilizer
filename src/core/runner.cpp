@@ -12,7 +12,7 @@ namespace core
 Runner::RunDuration Runner::run_task()
 {
     // generate random padding for stack and heap
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 512);
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 2048);
 
     const size_t stack_size = dist(rng), heap_size = dist(rng);
 
@@ -59,26 +59,16 @@ void Runner::run_multi_thread(size_t n, size_t threads)
 
 void Runner::run(size_t n, bool multithreaded)
 {
-    // push n number of runners
-
-    // for (size_t i = 0; i < n; i++)
-    // {
-    //     pool.push([&]() { return run_task(); });
-    // }
-
     // single threaded
 
     if (!multithreaded)
     {
         run_single_thread(n);
     }
-
     else
     {
         run_multi_thread(n);
     }
-
-    // sync back threads
 }
 
 stats::SingleVarStats Runner::runtime()
