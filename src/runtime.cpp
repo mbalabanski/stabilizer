@@ -12,8 +12,8 @@ TestResult compare_runtime(
     // run t test with two runtimes
 
     stats::TDistribution tdist_diff(
-        rt1.mu, rt1.sigma, rt1.n,
-        rt2.mu, rt2.sigma, rt2.n
+        rt1.mean, rt1.variance, rt1.n,
+        rt2.mean, rt2.variance, rt2.n
     );
 
     double stat = tdist_diff.statistic(0.0);
@@ -67,12 +67,12 @@ void output_test_result(const TestResult& result)
     std::cout << "Test results: \n";
 
     std::cout << 
-        "Runtime 1: mu: " << result.runtime1.mu << 
-        "ns, sigma: " << result.runtime1.sigma << 
+        "Runtime 1: mean: " << result.runtime1.mean << 
+        "ns, variance: " << result.runtime1.variance << 
         "ns, n: " << result.runtime1.n << "\n";
     std::cout << 
-        "Runtime 2: mu: " << result.runtime2.mu << 
-        "ns, sigma: " << result.runtime2.sigma << 
+        "Runtime 2: mean: " << result.runtime2.mean << 
+        "ns, variance: " << result.runtime2.variance << 
         "ns, n: " << result.runtime2.n << "\n";
 
     std::cout << "T-Test statistic: " << result.test_statistic << "\n";

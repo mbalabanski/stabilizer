@@ -14,27 +14,27 @@ namespace
 {
 
 template<typename T>
-auto calc_variance(const std::vector<T>& vec, const double mu, const size_t n) -> T
+auto calc_variance(const std::vector<T>& vec, const double mean, const size_t n) -> T
 {
     if (n <= 1) { return static_cast<T>(0); }
 
     auto func = [&](const T& val)
     {
-        return ((val - mu) * (val - mu) / (n - 1));
+        return ((val - mean) * (val - mean) / (n - 1));
     };
 
     return static_cast<T>(sqrtl(std::transform_reduce(vec.begin(), vec.end(), 0.0, std::plus{}, func ) ));
 }
    
-template double calc_variance<double>(const std::vector<double>& vec, const double mu, const size_t );
+template double calc_variance<double>(const std::vector<double>& vec, const double mean, const size_t );
 
 }
 
 struct SingleVarStats
 {
     size_t n;
-    double mu;
-    double sigma;
+    double mean;
+    double variance;
 };
 
 /**

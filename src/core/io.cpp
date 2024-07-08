@@ -42,7 +42,7 @@ void write_runtime_to_output(
         file << "average (ns), stdev (ns), n" << std::endl;
     }
 
-    file << runtime_data.mu << "," << runtime_data.sigma << "," << runtime_data.n << std::endl;
+    file << runtime_data.mean << "," << runtime_data.variance << "," << runtime_data.n << std::endl;
 
     file.close();
 }
