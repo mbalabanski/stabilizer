@@ -17,8 +17,8 @@ Runner::RunDuration Runner::run_task()
     const size_t stack_size = dist(rng), heap_size = dist(rng);
 
     // create stack & heap buffer
-    size_t* stack_padding = (size_t*) alloca(sizeof(size_t) * stack_size); // - clears out when loses scope
-    std::unique_ptr<size_t> heap_padding(new size_t[heap_size]);
+    size_t* stack_padding = (size_t*) alloca(sizeof(size_t) * stack_size); // - clears out when loses scope -- no need to free
+    std::unique_ptr<size_t[]> heap_padding = std::make_unique<size_t[]>(heap_size);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     func_handler();
