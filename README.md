@@ -94,7 +94,7 @@ int main()
 }
 ```
 
-> For more examples, see tests: `test/wait.cpp`, `test/calc_test.cpp`, and `test/confusion_matrix.cpp`.
+> For more examples, see examples: `examples/wait.cpp`, `examples/calc.cpp`, and `examples/confusion_matrix.cpp`.
 
 ### `sable::compare_runtime_multithreaded`
 
@@ -200,6 +200,6 @@ int main()
 
 ### Further examples
 
-For further usage examples, see `test/` directory.
+For further usage, see `examples/` directory.
 
-Make any of the tests using `make [TestName]`
+Make any of the examples using `make [ExampleName]`.
