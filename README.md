@@ -1,4 +1,4 @@
-# Sable
+# Stabilizer
 
 Runtime performance analysis for c++ code.
 
