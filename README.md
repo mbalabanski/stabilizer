@@ -27,8 +27,8 @@ These are important to keep in mind during usage, especially when setting parame
 Clone this repository and make using:
 
 ```sh
-$ git clone https://github.com/MaxiBal/sable.git
-$ cd sable
+$ git clone https://github.com/mbalabanski/stabilizer.git
+$ cd stabilizer
 $ mkdir build && cd build
 $ cmake ..
 $ make sable_lib
